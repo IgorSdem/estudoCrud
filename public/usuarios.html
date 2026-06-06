@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Usuários</title>
+    <style>
+        /* RESET E CONFIGURAÇÕES GERAIS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            color: #1f2937;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        /* CONTAINER PRINCIPAL */
+        .painel-container {
+            width: 100%;
+            max-width: 1000px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 30px;
+        }
+
+        /* CABEÇALHO */
+        header {
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h1 {
+            font-size: 24px;
+            color: #111827;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .contador-badge {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* ÁREA DA TABELA */
+        .tabela-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+
+        .tabela-usuarios {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .tabela-usuarios th {
+            background-color: #f9fafb;
+            color: #374151;
+            padding: 14px 16px;
+            font-weight: 600;
+            border-bottom: 2px solid #e5e7eb;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+        }
+
+        .tabela-usuarios td {
+            padding: 16px;
+            border-bottom: 1px solid #edf2f7;
+            color: #4b5563;
+        }
+
+        /* Efeito Zebrado e Hover */
+        .tabela-usuarios tbody tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        .tabela-usuarios tr:hover {
+            background-color: #f1f5f9;
+            transition: background-color 0.2s ease;
+        }
+
+        /* BADGES DE PERMISSÃO */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 50px;
+        }
+
+        .badge-adm {
+            background-color: #fef3c7;
+            color: #d97706;
+            border: 1px solid #fde68a;
+        }
+
+        .badge-user {
+            background-color: #e0f2fe;
+            color: #0284c7;
+            border: 1px solid #bae6fd;
+        }
+
+        /* BOTÃO VOLTAR */
+        .btn-voltar {
+            display: inline-block;
+            margin-top: 25px;
+            background-color: #4b5563;
+            color: #ffffff;
+            text-align: center;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .btn-voltar:hover {
+            background-color: #374151;
+        }
+
+        .btn-voltar:active {
+            transform: scale(0.98);
+        }
+
+        /* TEXTO DE LOADING E ERRO */
+        .status-mensagem {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="painel-container">
+        <header>
+            <div>
+                <h1>Controle de Usuários</h1>
+                <p>Gerenciamento de contas ativas e níveis de permissão no banco de dados.</p>
+            </div>
+            <div class="contador-badge" id="contador-usuarios">
+                Carregando total...
+            </div>
+        </header>
+
+        <main class="painel-conteudo">
+            <div class="tabela-container">
+                <table class="tabela-usuarios">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">ID</th>
+                            <th>Nome Completo</th>
+                            <th>E-mail Institucional</th>
+                            <th style="width: 150px;">Nível de Acesso</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaCorpo">
+                        <tr>
+                            <td colspan="4" class="status-mensagem">Buscando registros no banco de dados...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <a href="painel.html" class="btn-voltar">← Voltar ao Painel</a>
+        </main>
+    </div>
+
+    <script>
+        async function carregarUsuarios() {
+            const tabelaCorpo = document.getElementById('tabelaCorpo');
+            const contador = document.getElementById('contador-usuarios');
+
+            try {
+                // Faz a requisição para a rota do Express
+               // Dentro do seu usuarios.html, altere esta linha:
+const resposta = await fetch('/api/usuarios');
+                
+                if (!resposta.ok) {
+                    alert('Acesso negado ou erro na autenticação.');
+                    window.location.href = '/painel.html';
+                    return;
+                }
+
+                const usuarios = await resposta.json();
+                
+                // Atualiza o contador de usuários
+                contador.innerText = `${usuarios.length} Usuários Cadastrados`;
+                
+                if (usuarios.length === 0) {
+                    tabelaCorpo.innerHTML = `<tr><td colspan="4" class="status-mensagem">Nenhum usuário encontrado.</td></tr>`;
+                    return;
+                }
+
+                // Renderiza em lote (Batch render) para performance com 200+ registros
+                let htmlLinhas = '';
+                usuarios.forEach(usr => {
+                    const badge = usr.is_admin === 1 
+                        ? '<span class="badge badge-adm">Administrador</span>' 
+                        : '<span class="badge badge-user">Usuário</span>';
+
+                    htmlLinhas += `
+                        <tr>
+                            <td><strong>#${usr.id}</strong></td>
+                            <td>${usr.nome}</td>
+                            <td>${usr.email}</td>
+                            <td>${badge}</td>
+                            <td><button onclick = "">Atualizar</td>
+            
+                        </tr>
+                    `;
+                });
+
+                tabelaCorpo.innerHTML = htmlLinhas;
+
+            } catch (erro) {
+                console.error('Erro ao listar usuários:', erro);
+                contador.innerText = "Erro ao carregar";
+                tabelaCorpo.innerHTML = `<tr><td colspan="4" class="status-mensagem" style="color: #dc2626;">Não foi possível carregar os dados.</td></tr>`;
+            }
+        }
+
+        // Executa a função automaticamente ao abrir a página
+        carregarUsuarios();
+    </script>
+</body>
+</html>

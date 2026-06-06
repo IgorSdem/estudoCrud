@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atualizar Usuário</title>
+    <link rel="stylesheet" href="cadastraUsuario.css"> </head>
+<body>
+    <div class="cadastro-container">
+        <h2>Atualizar Cadastro</h2>
+        <p>Informe o e-mail do usuário que deseja alterar e preencha os novos dados.</p>
+
+        <form action="/atualizar" method="POST" id="formAtualizar">
+            
+            <div class="input-group">
+                <label for="emailAtual">E-mail Atual do Usuário</label>
+                <input type="email" id="emailAtual" name="emailAtual" placeholder="Ex: joao@gmail.com" required>
+            </div>
+
+            <hr style="margin-bottom: 20px; border: 0; border-top: 1px dashed #ccc;">
+
+            <div class="input-group">
+                <label for="novoNome">Novo Nome Completo</label>
+                <input type="text" id="novoNome" name="novoNome" placeholder="Digite o novo nome" required>
+            </div>
+
+            <div class="input-group">
+                <label for="novaSenha">Nova Senha</label>
+                <input type="password" id="novaSenha" name="novaSenha" placeholder="Digite a nova senha" minlength="6" required>
+            </div>
+
+            <button type="submit" class="btn-enviar" style="background-color: #3498db;">Atualizar no Sistema</button>
+        </form>
+    </div>
+</body>
+</html>

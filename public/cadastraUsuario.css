@@ -1,0 +1,84 @@
+/* Zerando padrões */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f4f6f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+}
+
+/* Caixa do Formulário (centralizada) */
+.cadastro-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+}
+
+.cadastro-container h2 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+    font-size: 24px;
+}
+
+.cadastro-container p {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin-bottom: 25px;
+}
+
+/* Grupos de Inputs */
+.input-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #34495e;
+}
+
+.input-group input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+/* Botão de Enviar */
+.btn-enviar {
+    width: 100%;
+    padding: 14px;
+    background-color: #2ecc71; /* Verde profissional */
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.btn-enviar:hover {
+    background-color: #27ae60;
+}

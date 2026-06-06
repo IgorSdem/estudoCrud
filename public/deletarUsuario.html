@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deletar Usuário</title>
+    <link rel="stylesheet" href="cadastraUsuario.css">
+</head>
+<body>
+    <div class="cadastro-container">
+        <h2 style="color: #c0392b;">Excluir Usuário</h2>
+        <p>Atenção! Esta ação é permanente. Informe o e-mail do usuário que deseja remover do sistema.</p>
+
+        <form action="/deletar" method="POST" onsubmit="return confirmarExclusao();">
+            
+            <div class="input-group">
+                <label for="emailDeletar">E-mail do Usuário</label>
+                <input type="email" id="emailDeletar" name="emailDeletar" placeholder="Ex: usuario@gmail.com" required>
+            </div>
+
+            <button type="submit" class="btn-enviar" style="background-color: #e74c3c;">Deletar do Sistema</button>
+        </form>
+        <br>
+        <a href="/painel.html" style="text-decoration: none; color: #3498db; font-weight: bold; display: block; text-align: center;">Voltar ao Painel</a>
+    </div>
+
+    <script>
+        function confirmarExclusao() {
+            return confirm('Tem certeza absoluta que deseja deletar este usuário do banco de dados?');
+        }
+    </script>
+</body>
+</html>
