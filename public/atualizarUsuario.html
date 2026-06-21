@@ -1,36 +1,173 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atualizar Usuário</title>
-    <link rel="stylesheet" href="cadastraUsuario.css"> </head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atualizar Usuário</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f4f4f4;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+
+.container{
+background:white;
+padding:30px;
+width:500px;
+max-width:100%;
+border-radius:10px;
+box-shadow:0 0 15px rgba(0,0,0,.1);
+}
+
+h2{
+margin-bottom:20px;
+text-align:center;
+color:#333;
+}
+
+.input-group{
+margin-bottom:15px;
+}
+
+label{
+display:block;
+margin-bottom:5px;
+font-weight:bold;
+}
+
+input{
+width:100%;
+padding:10px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+input[readonly]{
+background:#f1f1f1;
+cursor:not-allowed;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#0d6efd;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+font-size:16px;
+}
+
+button:hover{
+background:#0b5ed7;
+}
+
+.voltar{
+display:block;
+text-align:center;
+margin-top:15px;
+text-decoration:none;
+color:#555;
+}
+</style>
+</head>
+
 <body>
-    <div class="cadastro-container">
-        <h2>Atualizar Cadastro</h2>
-        <p>Informe o e-mail do usuário que deseja alterar e preencha os novos dados.</p>
+<div class="container">
+<h2>Atualizar Usuário</h2>
 
-        <form action="/atualizar" method="POST" id="formAtualizar">
-            
-            <div class="input-group">
-                <label for="emailAtual">E-mail Atual do Usuário</label>
-                <input type="email" id="emailAtual" name="emailAtual" placeholder="Ex: joao@gmail.com" required>
-            </div>
+<form id="formAtualizar">
+<div class="input-group">
+<label for="id">ID</label>
+<input type="text" id="id" readonly>
+</div>
 
-            <hr style="margin-bottom: 20px; border: 0; border-top: 1px dashed #ccc;">
+<div class="input-group">
+<label for="novoNome">Nome</label>
+<input type="text" id="novoNome" minlength="3" required>
+</div>
 
-            <div class="input-group">
-                <label for="novoNome">Novo Nome Completo</label>
-                <input type="text" id="novoNome" name="novoNome" placeholder="Digite o novo nome" required>
-            </div>
+<div class="input-group">
+<label for="email">Email</label>
+<input type="email" id="email" required>
+</div>
 
-            <div class="input-group">
-                <label for="novaSenha">Nova Senha</label>
-                <input type="password" id="novaSenha" name="novaSenha" placeholder="Digite a nova senha" minlength="6" required>
-            </div>
+<div class="input-group">
+<label for="novaSenha">Nova Senha</label>
+<input type="password" id="novaSenha" minlength="6" placeholder="Deixe em branco para manter a senha atual">
+</div>
 
-            <button type="submit" class="btn-enviar" style="background-color: #3498db;">Atualizar no Sistema</button>
-        </form>
-    </div>
+<button type="submit">Atualizar Usuário</button>
+</form>
+
+<a href="/usuarios" class="voltar">← Voltar para lista</a>
+</div>
+
+<script>
+const parametros = new URLSearchParams(window.location.search);
+const id = parametros.get('id');
+
+async function carregarUsuario(){
+try{
+const resposta = await fetch(`/api/usuarios/${id}`);
+
+if(!resposta.ok){
+throw new Error('Usuário não encontrado');
+}
+
+const usuario = await resposta.json();
+
+document.getElementById('id').value = usuario.id;
+document.getElementById('novoNome').value = usuario.nome;
+document.getElementById('email').value = usuario.email;
+}catch(erro){
+alert('Erro ao carregar usuário.');
+window.location.href = '/usuarios';
+}
+}
+
+document
+.getElementById('formAtualizar')
+.addEventListener('submit', async function(e){
+e.preventDefault();
+
+const dados = {
+novoNome: document.getElementById('novoNome').value,
+email: document.getElementById('email').value,
+novaSenha: document.getElementById('novaSenha').value
+};
+
+const resposta = await fetch(`/atualizar/${id}`, {
+method:'POST',
+headers:{
+'Content-Type':'application/json'
+},
+body:JSON.stringify(dados)
+});
+
+if(!resposta.ok){
+const texto = await resposta.text();
+alert(texto || 'Erro ao atualizar usuário.');
+return;
+}
+
+alert('Usuário atualizado com sucesso!');
+window.location.href = '/usuarios';
+});
+
+carregarUsuario();
+</script>
 </body>
 </html>

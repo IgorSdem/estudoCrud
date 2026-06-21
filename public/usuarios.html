@@ -1,259 +1,344 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Administrativo - Usuários</title>
-    <style>
-        /* RESET E CONFIGURAÇÕES GERAIS */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Usuários</title>
 
-        body {
-            background-color: #f3f4f6;
-            color: #1f2937;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
 
-        /* CONTAINER PRINCIPAL */
-        .painel-container {
-            width: 100%;
-            max-width: 1000px;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            padding: 30px;
-        }
+body{
+background:#f5f5f5;
+padding:20px;
+}
 
-        /* CABEÇALHO */
-        header {
-            border-bottom: 2px solid #f3f4f6;
-            padding-bottom: 20px;
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
+.container{
+max-width:1200px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:8px;
+box-shadow:0 0 10px rgba(0,0,0,.1);
+}
 
-        header h1 {
-            font-size: 24px;
-            color: #111827;
-            font-weight: 700;
-        }
+.topo{
+background:#e5e7eb;
+padding:32px;
+border-radius:5px;
+margin-bottom:20px;
+display:flex;
+justify-content:space-between;
+gap:16px;
+align-items:center;
+}
 
-        header p {
-            font-size: 14px;
-            color: #6b7280;
-            margin-top: 4px;
-        }
+.topo a{
+color:#0d6efd;
+font-weight:bold;
+text-decoration:none;
+}
 
-        .contador-badge {
-            background-color: #e0f2fe;
-            color: #0369a1;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
-        }
+.acoes{
+display:flex;
+gap:15px;
+align-items:center;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
 
-        /* ÁREA DA TABELA */
-        .tabela-container {
-            width: 100%;
-            overflow-x: auto;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-        }
+.btn{
+padding:10px 15px;
+border:none;
+border-radius:4px;
+cursor:pointer;
+color:white;
+text-decoration:none;
+font-size:14px;
+display:inline-block;
+}
 
-        .tabela-usuarios {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 14px;
-        }
+.btn-add{
+background:#28a745;
+}
 
-        .tabela-usuarios th {
-            background-color: #f9fafb;
-            color: #374151;
-            padding: 14px 16px;
-            font-weight: 600;
-            border-bottom: 2px solid #e5e7eb;
-            text-transform: uppercase;
-            font-size: 12px;
-            letter-spacing: 0.05em;
-        }
+.btn-filtrar,
+.btn-info{
+background:#0d6efd;
+}
 
-        .tabela-usuarios td {
-            padding: 16px;
-            border-bottom: 1px solid #edf2f7;
-            color: #4b5563;
-        }
+.btn-update{
+background:#ffc107;
+color:black;
+}
 
-        /* Efeito Zebrado e Hover */
-        .tabela-usuarios tbody tr:nth-child(even) {
-            background-color: #f9fafb;
-        }
+.btn-delete{
+background:#dc3545;
+}
 
-        .tabela-usuarios tr:hover {
-            background-color: #f1f5f9;
-            transition: background-color 0.2s ease;
-        }
+input{
+padding:10px;
+width:280px;
+border:1px solid #ccc;
+border-radius:4px;
+}
 
-        /* BADGES DE PERMISSÃO */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 10px;
-            font-size: 12px;
-            font-weight: 600;
-            border-radius: 50px;
-        }
+table{
+width:100%;
+border-collapse:collapse;
+}
 
-        .badge-adm {
-            background-color: #fef3c7;
-            color: #d97706;
-            border: 1px solid #fde68a;
-        }
+th{
+background:#f8f9fa;
+padding:12px;
+text-align:left;
+}
 
-        .badge-user {
-            background-color: #e0f2fe;
-            color: #0284c7;
-            border: 1px solid #bae6fd;
-        }
+td{
+padding:12px;
+border-top:1px solid #ddd;
+}
 
-        /* BOTÃO VOLTAR */
-        .btn-voltar {
-            display: inline-block;
-            margin-top: 25px;
-            background-color: #4b5563;
-            color: #ffffff;
-            text-align: center;
-            padding: 12px 24px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-        }
+tr:nth-child(even){
+background:#f2f2f2;
+}
 
-        .btn-voltar:hover {
-            background-color: #374151;
-        }
+.mensagem{
+padding:16px;
+text-align:center;
+color:#555;
+}
 
-        .btn-voltar:active {
-            transform: scale(0.98);
-        }
+.modal{
+display:none;
+position:fixed;
+left:0;
+top:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.5);
+justify-content:center;
+align-items:center;
+padding:20px;
+}
 
-        /* TEXTO DE LOADING E ERRO */
-        .status-mensagem {
-            text-align: center;
-            padding: 40px;
-            color: #6b7280;
-            font-style: italic;
-        }
-    </style>
+.modal-content{
+background:white;
+padding:20px;
+border-radius:8px;
+width:400px;
+max-width:100%;
+}
+
+.fechar{
+float:right;
+cursor:pointer;
+font-size:20px;
+}
+
+@media(max-width:700px){
+.topo{
+align-items:flex-start;
+flex-direction:column;
+}
+
+table{
+font-size:14px;
+}
+
+th,
+td{
+padding:8px;
+}
+}
+</style>
 </head>
+
 <body>
+<div class="container">
+<div class="topo">
+<h1>Usuários</h1>
+<a href="/logout">Sair</a>
+</div>
 
-    <div class="painel-container">
-        <header>
-            <div>
-                <h1>Controle de Usuários</h1>
-                <p>Gerenciamento de contas ativas e níveis de permissão no banco de dados.</p>
-            </div>
-            <div class="contador-badge" id="contador-usuarios">
-                Carregando total...
-            </div>
-        </header>
+<div class="acoes">
+<a class="btn btn-add" href="/cadastroUsuario.html">Adicionar</a>
 
-        <main class="painel-conteudo">
-            <div class="tabela-container">
-                <table class="tabela-usuarios">
-                    <thead>
-                        <tr>
-                            <th style="width: 80px;">ID</th>
-                            <th>Nome Completo</th>
-                            <th>E-mail Institucional</th>
-                            <th style="width: 150px;">Nível de Acesso</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelaCorpo">
-                        <tr>
-                            <td colspan="4" class="status-mensagem">Buscando registros no banco de dados...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+<input
+type="text"
+id="filtro"
+placeholder="Buscar por nome ou e-mail"
+oninput="filtrarUsuarios()">
 
-            <a href="painel.html" class="btn-voltar">← Voltar ao Painel</a>
-        </main>
-    </div>
+<button
+class="btn btn-filtrar"
+onclick="filtrarUsuarios()">
+Filtrar
+</button>
+</div>
 
-    <script>
-        async function carregarUsuarios() {
-            const tabelaCorpo = document.getElementById('tabelaCorpo');
-            const contador = document.getElementById('contador-usuarios');
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Nome</th>
+<th>Email</th>
+<th>Nível</th>
+<th>Ações</th>
+</tr>
+</thead>
 
-            try {
-                // Faz a requisição para a rota do Express
-               // Dentro do seu usuarios.html, altere esta linha:
+<tbody id="tabelaUsuarios">
+<tr>
+<td colspan="5" class="mensagem">Carregando usuários...</td>
+</tr>
+</tbody>
+</table>
+
+<br>
+
+<a href="/painel.html">← Voltar ao Painel</a>
+</div>
+
+<div class="modal" id="modalInfo">
+<div class="modal-content">
+<span class="fechar" onclick="fecharModal()">×</span>
+<h2>Dados do Usuário</h2>
+<div id="dadosUsuario"></div>
+</div>
+</div>
+
+<script>
+let usuarios = [];
+
+async function carregarUsuarios(){
+try{
 const resposta = await fetch('/api/usuarios');
-                
-                if (!resposta.ok) {
-                    alert('Acesso negado ou erro na autenticação.');
-                    window.location.href = '/painel.html';
-                    return;
-                }
 
-                const usuarios = await resposta.json();
-                
-                // Atualiza o contador de usuários
-                contador.innerText = `${usuarios.length} Usuários Cadastrados`;
-                
-                if (usuarios.length === 0) {
-                    tabelaCorpo.innerHTML = `<tr><td colspan="4" class="status-mensagem">Nenhum usuário encontrado.</td></tr>`;
-                    return;
-                }
+if(!resposta.ok){
+throw new Error('Erro ao carregar usuários');
+}
 
-                // Renderiza em lote (Batch render) para performance com 200+ registros
-                let htmlLinhas = '';
-                usuarios.forEach(usr => {
-                    const badge = usr.is_admin === 1 
-                        ? '<span class="badge badge-adm">Administrador</span>' 
-                        : '<span class="badge badge-user">Usuário</span>';
+usuarios = await resposta.json();
+renderizarTabela(usuarios);
+}catch(e){
+console.error(e);
+document.getElementById('tabelaUsuarios').innerHTML = `
+<tr>
+<td colspan="5" class="mensagem">Não foi possível carregar os usuários.</td>
+</tr>
+`;
+}
+}
 
-                    htmlLinhas += `
-                        <tr>
-                            <td><strong>#${usr.id}</strong></td>
-                            <td>${usr.nome}</td>
-                            <td>${usr.email}</td>
-                            <td>${badge}</td>
-                            <td><button onclick = "">Atualizar</td>
-            
-                        </tr>
-                    `;
-                });
+function renderizarTabela(lista){
+const tabela = document.getElementById('tabelaUsuarios');
 
-                tabelaCorpo.innerHTML = htmlLinhas;
+if(lista.length === 0){
+tabela.innerHTML = `
+<tr>
+<td colspan="5" class="mensagem">Nenhum usuário encontrado.</td>
+</tr>
+`;
+return;
+}
 
-            } catch (erro) {
-                console.error('Erro ao listar usuários:', erro);
-                contador.innerText = "Erro ao carregar";
-                tabelaCorpo.innerHTML = `<tr><td colspan="4" class="status-mensagem" style="color: #dc2626;">Não foi possível carregar os dados.</td></tr>`;
-            }
-        }
+let html = '';
 
-        // Executa a função automaticamente ao abrir a página
-        carregarUsuarios();
-    </script>
+lista.forEach(usuario=>{
+html += `
+<tr>
+<td>${usuario.id}</td>
+<td>${usuario.nome}</td>
+<td>${usuario.email}</td>
+<td>${usuario.is_admin == 1 ? 'Administrador' : 'Usuário'}</td>
+<td>
+<button class="btn btn-info" onclick="mostrarInfo(${usuario.id})">Exibir</button>
+<button class="btn btn-update" onclick="atualizarUsuario(${usuario.id})">Atualizar</button>
+<button class="btn btn-delete" onclick="excluirUsuario(${usuario.id})">Excluir</button>
+</td>
+</tr>
+`;
+});
+
+tabela.innerHTML = html;
+}
+
+function filtrarUsuarios(){
+const termo = document.getElementById('filtro').value.toLowerCase().trim();
+
+const resultado = usuarios.filter(usuario =>
+usuario.nome.toLowerCase().includes(termo) ||
+usuario.email.toLowerCase().includes(termo)
+);
+
+renderizarTabela(resultado);
+}
+
+async function mostrarInfo(id){
+const resposta = await fetch(`/api/usuarios/${id}`);
+
+if(!resposta.ok){
+alert('Erro ao buscar usuário.');
+return;
+}
+
+const usuario = await resposta.json();
+
+document.getElementById('dadosUsuario').innerHTML = `
+<p><b>ID:</b> ${usuario.id}</p>
+<p><b>Nome:</b> ${usuario.nome}</p>
+<p><b>Email:</b> ${usuario.email}</p>
+<p><b>Administrador:</b> ${usuario.is_admin == 1 ? 'Sim' : 'Não'}</p>
+`;
+
+document.getElementById('modalInfo').style.display = 'flex';
+}
+
+function fecharModal(){
+document.getElementById('modalInfo').style.display = 'none';
+}
+
+function atualizarUsuario(id){
+window.location.href = 'atualizarUsuario.html?id=' + id;
+}
+
+async function excluirUsuario(id){
+const respostaUsuario = await fetch(`/api/usuarios/${id}`);
+
+if(!respostaUsuario.ok){
+alert('Erro ao buscar usuário.');
+return;
+}
+
+const usuario = await respostaUsuario.json();
+
+const confirmar = confirm(`Deseja excluir este usuário?\n\nNome: ${usuario.nome}\nEmail: ${usuario.email}`);
+
+if(!confirmar){
+return;
+}
+
+const respostaExclusao = await fetch(`/api/usuarios/${id}`, {
+method:'DELETE'
+});
+
+if(!respostaExclusao.ok){
+const erro = await respostaExclusao.json().catch(() => ({ erro: 'Erro ao excluir usuário.' }));
+alert(erro.erro || 'Erro ao excluir usuário.');
+return;
+}
+
+alert('Usuário excluído com sucesso!');
+carregarUsuarios();
+}
+
+carregarUsuarios();
+</script>
 </body>
 </html>

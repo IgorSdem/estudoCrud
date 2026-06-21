@@ -1,0 +1,364 @@
+RELATORIO DE ALTERACOES E LOGS - CRUD USUARIOS
+Data: 2026-06-21
+Projeto: C:\Users\Igor\Desktop\Projetos\Crud
+
+============================================================
+1. RESUMO GERAL
+============================================================
+
+Foram feitos ajustes de seguranca, organizacao, interface e estabilidade no CRUD.
+O foco principal foi proteger rotas administrativas, melhorar o tratamento de senhas,
+corrigir textos com acentuacao quebrada, remover duplicacoes e deixar o projeto mais
+preparado para uso real.
+
+============================================================
+2. ARQUIVOS ALTERADOS OU CRIADOS
+============================================================
+
+Arquivos principais alterados:
+
+- server.js
+- package.json
+- package-lock.json
+- public/usuarios.html
+- public/cadastroUsuario.html
+- public/atualizarUsuario.html
+- public/painel.html
+- public/dashboard.html
+- public/deletarUsuario.html
+- public/Painel.css
+- public/cadastraUsuario.css
+
+Arquivos criados:
+
+- .env.example
+- .gitignore
+- ALTERACOES_E_LOGS.txt
+
+============================================================
+3. ALTERACOES NO BACKEND
+============================================================
+
+Arquivo: server.js
+
+Alteracoes feitas:
+
+- Removido uso de body-parser.
+- Mantido uso nativo do Express:
+  - express.urlencoded({ extended: true })
+  - express.json()
+
+- Criado carregamento simples de variaveis de ambiente a partir de .env.
+- Adicionado suporte para:
+  - PORT
+  - SESSION_SECRET
+  - DB_HOST
+  - DB_USER
+  - DB_PASSWORD
+  - DB_NAME
+
+- Melhorada configuracao de sessao:
+  - httpOnly: true
+  - sameSite: "lax"
+  - maxAge de 2 horas
+
+- Criadas funcoes de seguranca/autenticacao:
+  - exigirLogin
+  - exigirAdmin
+  - validarId
+  - validarUsuario
+
+- Protegidas rotas administrativas:
+  - /painel.html
+  - /dashboard
+  - /dashboard.html
+  - /cadastroUsuario.html
+  - /deletarUsuario.html
+  - /atualizarUsuario.html
+  - /usuarios
+  - /api/usuarios
+  - /api/usuarios/:id
+  - DELETE /api/usuarios/:id
+  - POST /cadastrar
+  - POST /atualizar/:id
+  - POST /deletar
+
+- Removida rota duplicada:
+  - DELETE /api/usuarios/:id
+
+- Removido SELECT * em rotas de usuario.
+- APIs nao retornam mais a coluna senha.
+- Adicionado bloqueio para impedir que um administrador exclua seu proprio usuario pela API.
+
+============================================================
+4. ALTERACOES DE SENHA E SEGURANCA
+============================================================
+
+Antes:
+
+- O login comparava email e senha diretamente no banco.
+- A senha provavelmente ficava salva em texto puro.
+
+Depois:
+
+- Senhas novas sao salvas com hash usando crypto.pbkdf2Sync.
+- Formato salvo:
+  pbkdf2$iterations$salt$hash
+
+- Senhas antigas em texto puro ainda funcionam.
+- Quando um usuario com senha antiga faz login, o sistema tenta migrar a senha para hash.
+- A migracao de senha agora tem tratamento de erro para nao derrubar o servidor.
+
+Problema encontrado:
+
+- O MySQL retornou:
+  Error: Data too long for column 'senha' at row 1
+
+Causa:
+
+- A coluna senha estava curta demais para guardar o hash seguro.
+
+Correcao aplicada:
+
+- Ao conectar no banco, o sistema tenta executar:
+  ALTER TABLE usuarios MODIFY senha VARCHAR(255) NOT NULL;
+
+- Se o ajuste automatico falhar, o servidor exibe no console a instrucao SQL para executar manualmente:
+  USE sistema_login;
+  ALTER TABLE usuarios MODIFY senha VARCHAR(255) NOT NULL;
+
+============================================================
+5. ALTERACOES NAS TELAS
+============================================================
+
+Arquivo: public/usuarios.html
+
+- Corrigida acentuacao:
+  - Usuarios -> Usuarios com acento onde aplicavel
+  - Usuario
+  - Acoes
+  - Nivel
+  - Nao
+
+- Melhorada listagem de usuarios:
+  - Estado de carregamento
+  - Mensagem quando nao ha usuarios
+  - Mensagem quando ocorre erro ao buscar dados
+
+- Melhorado filtro:
+  - Antes filtrava apenas por inicial do nome.
+  - Agora busca por nome ou e-mail usando includes.
+
+- Melhorada exclusao:
+  - Busca os dados antes de excluir.
+  - Confirma exclusao mostrando nome e e-mail.
+  - Trata erros da API.
+
+- Adicionado link de logout no topo.
+- Mantido link para voltar ao painel.
+
+Arquivo: public/cadastroUsuario.html
+
+- Corrigida acentuacao.
+- Removido id desnecessario "teste".
+- Adicionado link para voltar para a lista.
+- Mantida validacao de senha igual no frontend.
+- Campo confirmarSenha agora e enviado ao backend e validado tambem no servidor.
+
+Arquivo: public/atualizarUsuario.html
+
+- Corrigida acentuacao.
+- Nova senha deixou de ser obrigatoria.
+- Placeholder informa que deixar em branco mantem a senha atual.
+- Corrigido envio dos dados:
+  - Antes usava FormData, mas o backend nao processava multipart/form-data.
+  - Agora envia JSON com Content-Type application/json.
+
+Arquivo: public/painel.html
+
+- Removidos estilos inline.
+- Adicionado botao de logout.
+- Links ajustados para rotas protegidas.
+
+Arquivo: public/dashboard.html
+
+- Corrigido link quebrado do CSS.
+- Corrigida estrutura HTML.
+- Corrigida acentuacao.
+
+Arquivo: public/deletarUsuario.html
+
+- Corrigida acentuacao.
+- Melhorada mensagem de confirmacao.
+- Removidos estilos inline principais.
+- Link de retorno aponta para /usuarios.
+
+============================================================
+6. ALTERACOES DE CSS
+============================================================
+
+Arquivo: public/Painel.css
+
+- Removidos caracteres invalidos de bloco de codigo dentro do @media.
+- Removidos estilos dependentes de nth-child para botoes.
+- Criadas classes explicitas:
+  - btn-primary
+  - btn-success
+  - btn-danger
+  - btn-secondary
+
+- Ajustado visual do painel.
+- Mantida responsividade.
+
+Arquivo: public/cadastraUsuario.css
+
+- Corrigidos comentarios/textos com acentuacao quebrada.
+- Adicionada classe:
+  - btn-perigo
+  - titulo-perigo
+
+- Melhorado espaçamento responsivo com padding no body.
+- Padronizados links.
+
+============================================================
+7. ALTERACOES EM PACKAGE
+============================================================
+
+Arquivo: package.json
+
+- Nome alterado:
+  de: aula.httml
+  para: crud-usuarios
+
+- Script de teste alterado:
+  de: echo "Error: no test specified" && exit 1
+  para: node --check server.js
+
+- Dependencia removida:
+  - body-parser
+
+- Dependencias atuais:
+  - express
+  - express-session
+  - mysql2
+
+Arquivo: package-lock.json
+
+- Nome do pacote atualizado para crud-usuarios.
+- Lock atualizado apos remocao de body-parser.
+
+============================================================
+8. ARQUIVOS NOVOS
+============================================================
+
+Arquivo: .env.example
+
+Criado exemplo de configuracao:
+
+PORT=3000
+SESSION_SECRET=troque-por-um-segredo-grande
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=123456
+DB_NAME=sistema_login
+
+Arquivo: .gitignore
+
+Criado para ignorar:
+
+node_modules/
+.env
+
+============================================================
+9. COMANDOS EXECUTADOS E LOGS IMPORTANTES
+============================================================
+
+Comando:
+  npm.cmd test
+
+Resultado:
+  > crud-usuarios@1.0.0 test
+  > node --check server.js
+
+Status:
+  Sucesso.
+
+Comando:
+  node --check server.js
+
+Resultado:
+  Sem erros de sintaxe.
+
+Comando:
+  npm.cmd uninstall body-parser
+
+Resultado:
+  Dependencia removida/atualizada no package-lock.
+
+Comando:
+  rg "Ã|â" public server.js
+
+Resultado:
+  Nenhum texto com sinais comuns de acentuacao quebrada encontrado nos arquivos revisados.
+
+Comando:
+  rg "SELECT \*" server.js
+
+Resultado:
+  Nenhum SELECT * encontrado.
+
+Comando:
+  rg "app.delete" server.js
+
+Resultado:
+  Apenas uma rota DELETE /api/usuarios/:id encontrada.
+
+Log informado pelo usuario:
+
+  Servidor rodando!
+  http://localhost:3000
+  Banco conectado com sucesso!
+  Error: Data too long for column 'senha' at row 1
+
+Acao tomada:
+
+  Adicionado ajuste automatico da coluna senha para VARCHAR(255).
+  Adicionado tratamento de erro na migracao de senha.
+  Adicionado listener de erro da conexao MySQL.
+
+============================================================
+10. COMO RODAR O PROJETO
+============================================================
+
+No PowerShell:
+
+  cd C:\Users\Igor\Desktop\Projetos\Crud
+  npm.cmd start
+
+Depois acessar:
+
+  http://localhost:3000
+
+Se o PowerShell permitir npm normalmente, tambem funciona:
+
+  npm start
+
+============================================================
+11. AJUSTE MANUAL CASO O MYSQL NAO ALTERE A COLUNA
+============================================================
+
+Se aparecer erro dizendo que nao foi possivel ajustar a coluna senha,
+execute no MySQL:
+
+  USE sistema_login;
+  ALTER TABLE usuarios MODIFY senha VARCHAR(255) NOT NULL;
+
+============================================================
+12. OBSERVACOES
+============================================================
+
+- O sistema ainda aceita senhas antigas em texto puro para nao quebrar usuarios existentes.
+- A senha antiga e convertida para hash no proximo login bem-sucedido.
+- Recomenda-se criar um arquivo .env real baseado no .env.example.
+- Recomenda-se definir SESSION_SECRET com um valor longo e dificil de adivinhar.
+- O projeto foi verificado com npm.cmd test e passou.

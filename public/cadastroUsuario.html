@@ -9,13 +9,12 @@
 <body>
     <div class="cadastro-container">
         <h2>Criar Nova Conta</h2>
-        <p>Preencha os campos abaixo para se cadastrar no sistema.</p>
+        <p>Preencha os campos abaixo para cadastrar um usuário no sistema.</p>
 
         <form action="/cadastrar" method="POST" id="formCadastro">
-            
-            <div class="input-group" id="teste">
+            <div class="input-group">
                 <label for="nome">Nome Completo</label>
-                <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required>
+                <input type="text" id="nome" name="nome" placeholder="Digite o nome completo" minlength="3" required>
             </div>
 
             <div class="input-group">
@@ -30,24 +29,26 @@
 
             <div class="input-group">
                 <label for="confirmarSenha">Confirmar Senha</label>
-                <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Digite a senha novamente" required>
+                <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Digite a senha novamente" minlength="6" required>
             </div>
 
             <button type="submit" class="btn-enviar">Cadastrar no Sistema</button>
-          
         </form>
+
+        <br>
+        <a href="/usuarios">Voltar para lista</a>
     </div>
 
     <script>
-        // Validação simples no client-side para garantir que as senhas são iguais antes de enviar ao banco
         const form = document.getElementById('formCadastro');
+
         form.addEventListener('submit', function(event) {
             const senha = document.getElementById('senha').value;
             const confirmarSenha = document.getElementById('confirmarSenha').value;
 
             if (senha !== confirmarSenha) {
-                event.preventDefault(); // Impede o envio do formulário
-                alert('As senhas não coincidem!');
+                event.preventDefault();
+                alert('As senhas não coincidem.');
             }
         });
     </script>

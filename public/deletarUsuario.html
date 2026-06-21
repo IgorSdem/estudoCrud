@@ -8,25 +8,26 @@
 </head>
 <body>
     <div class="cadastro-container">
-        <h2 style="color: #c0392b;">Excluir Usuário</h2>
-        <p>Atenção! Esta ação é permanente. Informe o e-mail do usuário que deseja remover do sistema.</p>
+        <h2 class="titulo-perigo">Excluir Usuário</h2>
+        <p>Atenção: esta ação é permanente. Informe o e-mail do usuário que deseja remover do sistema.</p>
 
         <form action="/deletar" method="POST" onsubmit="return confirmarExclusao();">
-            
             <div class="input-group">
                 <label for="emailDeletar">E-mail do Usuário</label>
-                <input type="email" id="emailDeletar" name="emailDeletar" placeholder="Ex: usuario@gmail.com" required>
+                <input type="email" id="emailDeletar" name="emailDeletar" placeholder="usuario@gmail.com" required>
             </div>
 
-            <button type="submit" class="btn-enviar" style="background-color: #e74c3c;">Deletar do Sistema</button>
+            <button type="submit" class="btn-enviar btn-perigo">Deletar do Sistema</button>
         </form>
+
         <br>
-        <a href="/painel.html" style="text-decoration: none; color: #3498db; font-weight: bold; display: block; text-align: center;">Voltar ao Painel</a>
+        <a href="/usuarios">Voltar para lista</a>
     </div>
 
     <script>
         function confirmarExclusao() {
-            return confirm('Tem certeza absoluta que deseja deletar este usuário do banco de dados?');
+            const email = document.getElementById('emailDeletar').value;
+            return confirm(`Tem certeza que deseja deletar o usuário ${email}?`);
         }
     </script>
 </body>

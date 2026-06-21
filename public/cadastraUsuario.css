@@ -1,4 +1,3 @@
-/* Zerando padrões */
 * {
     margin: 0;
     padding: 0;
@@ -13,9 +12,9 @@ body {
     align-items: center;
     min-height: 100vh;
     color: #333;
+    padding: 20px;
 }
 
-/* Caixa do Formulário (centralizada) */
 .cadastro-container {
     background-color: #ffffff;
     padding: 40px;
@@ -37,7 +36,6 @@ body {
     margin-bottom: 25px;
 }
 
-/* Grupos de Inputs */
 .input-group {
     margin-bottom: 20px;
     display: flex;
@@ -64,11 +62,10 @@ body {
     outline: none;
 }
 
-/* Botão de Enviar */
 .btn-enviar {
     width: 100%;
     padding: 14px;
-    background-color: #2ecc71; /* Verde profissional */
+    background-color: #2ecc71;
     border: none;
     border-radius: 6px;
     color: white;
@@ -81,4 +78,34 @@ body {
 
 .btn-enviar:hover {
     background-color: #27ae60;
+}
+
+.btn-perigo {
+    background-color: #e74c3c;
+}
+
+.btn-perigo:hover {
+    background-color: #c0392b;
+}
+
+.titulo-perigo {
+    color: #c0392b !important;
+}
+
+input[readonly] {
+    background: #f1f1f1;
+    cursor: not-allowed;
+}
+
+a {
+    color: #3498db;
+    display: block;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+a:hover {
+    opacity: .8;
 }
